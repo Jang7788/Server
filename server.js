@@ -14,13 +14,27 @@ const cartRoutes = require('./routes/cart');
 const app = express();
 app.use(express.json());
 
+// CORS
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://shop-demo-umber.vercel.app" // frontend deploy
+];
+
 app.use(cors({
-  origin: FRONTEND_URL,
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // allow Postman / server-to-server
+    if(!allowedOrigins.includes(origin)){
+      return callback(new Error('CORS policy does not allow this origin'), false);
+    }
+    return callback(null, true);
+  },
   credentials: true
 }));
 
+// Serve static uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Session
 app.use(
   session({
     secret: "sskibidi_toilet_1234_secret_keyfdsffgh21fgh21h2fg1",
@@ -31,7 +45,8 @@ app.use(
     }),
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: true,      // สำหรับ HTTPS frontend
+      sameSite: "none",  // cross-site cookie
       maxAge: 1000 * 60 * 60 * 3,
     },
   })
@@ -39,10 +54,12 @@ app.use(
 
 console.log("Registering routes...");
 
+// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 
 console.log("Routes registered successfully.");
 
+// Listen
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
