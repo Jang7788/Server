@@ -1,6 +1,12 @@
 const { type } = require("@testing-library/user-event/dist/type");
 const mongoose = require("mongoose");
-const ProductConn = mongoose.createConnection("mongodb+srv://netbum21_db_user:3RmZzKbOhMOuZqFR@cluster0.v924yzi.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/Products");
+const ProductConn = mongoose.createConnection(
+  "mongodb+srv://netbum21_db_user:3RmZzKbOhMOuZqFR@cluster0.v924yzi.mongodb.net/Products?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+);
 
 const ProductSchema = new mongoose.Schema({
     id: { type: Number, unique: true },
