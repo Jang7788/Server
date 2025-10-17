@@ -1,4 +1,3 @@
-const { type } = require("@testing-library/user-event/dist/type");
 const mongoose = require("mongoose");
 const ProductConn = mongoose.createConnection(
   "mongodb+srv://netbum21_db_user:3RmZzKbOhMOuZqFR@cluster0.v924yzi.mongodb.net/Products?retryWrites=true&w=majority",

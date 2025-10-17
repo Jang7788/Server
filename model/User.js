@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { type } = require('@testing-library/user-event/dist/type');
 
 const userConn = mongoose.createConnection(
   "mongodb+srv://netbum21_db_user:3RmZzKbOhMOuZqFR@cluster0.v924yzi.mongodb.net/users?retryWrites=true&w=majority",
