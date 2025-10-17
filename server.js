@@ -5,9 +5,9 @@ const cors = require("cors");
 const MongoStore = require("connect-mongo"); 
 const path = require('path'); 
 const PORT = 3600;
-const authRoutes = require("./Routes/auth")       
-const productRoutes = require('./Routes/product');  
-const cartRoutes = require('./Routes/cart');      
+const authRoutes = require("./routes/auth")       
+const productRoutes = require('./routes/product');  
+const cartRoutes = require('./routes/cart');      
 const app = express();
 
 app.use(express.json());
