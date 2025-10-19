@@ -2,42 +2,41 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../model/User"); 
-const jwt = require('jsonwebtoken');
 
 router.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
+
     if (!username || !email || !password) {
         return res.status(400).json({ message: "กรุณากรอกข้อมูลให้ครบถ้วน" });
     }
 
     try {
-        const existingUser = await User.findOne({ email: email });
+        const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(409).json({ message: "อีเมลนี้มีผู้ใช้งานแล้ว" });
         }
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
+
         const newUser = new User({
             username,
             email,
             password: hashedPassword,
         });
-        const savedUser = await newUser.save();
-        const payload = {
-            user: {
-                id: savedUser.id
-            }
-        };
 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const savedUser = await newUser.save();
+
+        const fakeToken = "temporary_token_no_jwt";
+
         res.status(201).json({
-            message: "ลงทะเบียนและเข้าสู่ระบบสำเร็จ!",
-            token: token,
+            message: "ลงทะเบียนสำเร็จ!",
+            token: fakeToken,
             user: {
                 _id: savedUser._id,
                 username: savedUser.username,
                 email: savedUser.email,
-            }
+            },
         });
 
     } catch (err) {
@@ -45,6 +44,7 @@ router.post("/register", async (req, res) => {
         res.status(500).json({ message: "เกิดข้อผิดพลาดในเซิร์ฟเวอร์" });
     }
 });
+
 
 router.post("/login", async (req, res) => {
   const { username, password } = req.body;
